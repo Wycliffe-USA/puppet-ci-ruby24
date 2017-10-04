@@ -21,5 +21,5 @@ RUN sed -i '3i . /etc/profile.d/rvm.sh\n' ~/.profile
 # interactive shell by default so rvm is sourced automatically
 ENTRYPOINT /bin/bash -l
 
-#Install ruby 2.3
-RUN /usr/local/rvm/bin/rvm install 2.3.0
+#Install ruby 2.4
+RUN /usr/local/rvm/bin/rvm install 2.4.0
