@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-RUN apt-get update
+RUN apt-get update; apt-get upgrade -y
 RUN apt-get install -y curl git patch bzip2 gawk g++ gcc make libc6-dev patch zlib1g-dev libyaml-dev libsqlite3-dev sqlite3 autoconf libgdbm-dev libncurses5-dev automake libtool bison pkg-config libffi-dev libreadline6-dev libssl-dev
 #RUN gem install puppet-lint --no-document
 
