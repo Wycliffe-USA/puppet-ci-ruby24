@@ -1,13 +1,18 @@
 FROM ubuntu:16.04
+ENV RUBY_VER="2.4.4"
 
-RUN apt-get update; apt-get upgrade -y
-RUN apt-get install -y curl git patch bzip2 gawk g++ gcc make libc6-dev patch zlib1g-dev libyaml-dev libsqlite3-dev sqlite3 autoconf libgdbm-dev libncurses5-dev automake libtool bison pkg-config libffi-dev libreadline6-dev libssl-dev
-#RUN gem install puppet-lint --no-document
+#Install dependancies for ruby and for puppet/r10k/octocatalog-diff.
+RUN apt-get update; apt-get upgrade -y; \
+    apt-get install -y curl git patch bzip2 gawk g++ gcc make cmake libc6-dev patch zlib1g-dev libyaml-dev libsqlite3-dev sqlite3 autoconf libgdbm-dev libncurses5-dev automake libtool bison pkg-config libffi-dev libreadline6-dev libssl-dev
 
-# install rvm
-RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 && \
-    \curl -sSL https://get.rvm.io | bash -s stable
-RUN /bin/bash -l -c 'source /etc/profile.d/rvm.sh'
+# install RVM, Ruby, and Bundler
+RUN curl -sSL https://rvm.io/mpapis.asc | gpg --import -; \
+    curl -sSL https://get.rvm.io | bash -s stable; \
+    /bin/bash -l -c "rvm requirements"; \
+    /bin/bash -l -c "rvm install $RUBY_VER"; \
+    /bin/bash -l -c "gem install bundler --no-ri --no-rdoc"; \
+    touch ~/.bashrc; \
+    echo 'source /etc/profile.d/rvm.sh' > ~/.bashrc
 
 # make bundler a default gem
 RUN echo bundler >> /usr/local/rvm/gemsets/global.gems
@@ -20,6 +25,3 @@ RUN sed -i '3i . /etc/profile.d/rvm.sh\n' ~/.profile
 
 # interactive shell by default so rvm is sourced automatically
 ENTRYPOINT /bin/bash -l
-
-#Install ruby 2.4
-RUN /usr/local/rvm/bin/rvm install 2.4.0
